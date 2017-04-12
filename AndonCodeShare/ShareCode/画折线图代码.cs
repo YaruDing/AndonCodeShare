@@ -1,142 +1,98 @@
-See the end of this message for details on invoking 
-just-in-time (JIT) debugging instead of this dialog box.
+/// <summary>
+/// 折线图绘制
+/// </summary>
+/// <param name="picBox">主体展示PictureBox</param>
+/// <param name="pointX">pictureBox location-X</param>
+/// <param name="pointY">pictureBox location-Y</param>
+/// <param name="width">pictureBox Width</param>
+/// <param name="height">pictureBox Height</param>
+/// <param name="titleText">标题</param>
+/// <param name="startX">坐标轴X</param>
+/// <param name="startY">坐标轴Y</param>
+/// <param name="disW">坐标轴 宽度间距</param>
+/// <param name="disH">坐标轴 高度间距</param>
+/// <param name="horizontalText">横坐标 文本</param>
+/// <param name="verticalText">纵坐标 文本</param>
+/// 外部变量 Color[] colors 
 
-************** Exception Text **************
-System.Net.Sockets.SocketException (0x80004005): ����Ŀ���������ˣ��׽��ֲ���ʧ�ܡ�
-   at EASendMail.SmtpClient.7j(String 5P, Boolean 5P, Boolean 5P, Boolean 5P)
-   at EASendMail.SmtpClient.72(Int32& 5P, String& 5P, Boolean 5P)
-   at EASendMail.SmtpClient.2\(SmtpServer 5P, SocksProxyProtocol 5P, Boolean 5P, Boolean 5P)
-   at EASendMail.SmtpClient.17(SmtpServer 5P, SocksProxyProtocol 5P)
-   at EASendMail.SmtpClient.Connect(SmtpServer server)
-   at EASendMail.SmtpClient.SendMail(SmtpServer server, SmtpMail mail)
-   at WeiXinSystemV1.TestForm.button2_Click(Object sender, EventArgs e) in F:\yaruding\WXTest\WeiXinSystemV1\WeiXinSystemV1\TestForm.cs:line 130
-   at System.Windows.Forms.Control.OnClick(EventArgs e)
-   at System.Windows.Forms.Button.OnClick(EventArgs e)
-   at System.Windows.Forms.Button.OnMouseUp(MouseEventArgs mevent)
-   at System.Windows.Forms.Control.WmMouseUp(Message& m, MouseButtons button, Int32 clicks)
-   at System.Windows.Forms.Control.WndProc(Message& m)
-   at System.Windows.Forms.ButtonBase.WndProc(Message& m)
-   at System.Windows.Forms.Button.WndProc(Message& m)
-   at System.Windows.Forms.Control.ControlNativeWindow.OnMessage(Message& m)
-   at System.Windows.Forms.Control.ControlNativeWindow.WndProc(Message& m)
-   at System.Windows.Forms.NativeWindow.Callback(IntPtr hWnd, Int32 msg, IntPtr wparam, IntPtr lparam)
+private void CreateImage(PictureBox picBox, int pointX, int pointY, int width, int height, string titleText, int startX, int startY, int disW, int disH, string[] horizontalText, string[] verticalText,string[] tuLiText, int[][] values)
+{
+    picBox.Visible = true;
+    picBox.Size = new System.Drawing.Size(width, height);
+    picBox.Location = new Point(pointX, pointY);
+
+    Bitmap image = new Bitmap(width, height);
+    Graphics gra = Graphics.FromImage(image);
+
+    Font titleFont = new Font("宋体", 20, FontStyle.Regular);
+    Font cordFont = new Font("宋体", 10, FontStyle.Regular);
+    Font tuLiFont = new Font("宋体", 12, FontStyle.Regular);
+    Brush blueBrush = new SolidBrush(Color.Blue);
+    Brush blackBrush = new SolidBrush(Color.Black);
+
+    picBox.Image = image;
+
+    try {
+        gra.Clear(Color.FromArgb(102, 135, 175));
+        gra.DrawRectangle(new Pen(Color.Black), 0, 0, image.Width - 1, image.Height - 1);
+        SizeF titleSize = gra.MeasureString(titleText, titleFont);
+        //标题
+        gra.DrawString(titleText, titleFont, blackBrush, new PointF(width / 2 - titleSize.Width / 2, 3));
+
+        //图例
+        int tuliX = width - 30;
+        for (int i = 0; i < tuLiText.Length; i++)
+        {
+            SizeF cordSize = gra.MeasureString("---" + tuLiText[i], tuLiFont);
+
+            gra.DrawString("---" + tuLiText[i], tuLiFont, new SolidBrush(colors[i]), new PointF(tuliX - cordSize.Width, 5));
+            tuliX = tuliX - Convert.ToInt32(cordSize.Width) - 3;
+        }
+
+        // startX + i * disW    
+        // height - startY  disH  
+
+        //纵轴
+        for (int i = 0; i < horizontalText.Length; i++)
+        {
+            gra.DrawLine(new Pen(Color.Black, 1), startX + i * disW, height - startY, startX + i * disW, titleSize.Height + 3);
+
+            SizeF cordSize = gra.MeasureString(horizontalText[i], cordFont);
+
+            gra.DrawString(horizontalText[i], cordFont, blackBrush, new PointF(startX + i * disW - cordSize.Width / 2, height - startY + cordSize.Height));
+        }
 
 
-************** Loaded Assemblies **************
-mscorlib
-    Assembly Version: 4.0.0.0
-    Win32 Version: 4.0.30128.1 (RC1Rel.030128-0100)
-    CodeBase: file:///C:/Windows/Microsoft.NET/Framework/v4.0.30128/mscorlib.dll
-----------------------------------------
-AndonWeChat
-    Assembly Version: 1.0.0.0
-    Win32 Version: 1.0.0.0
-    CodeBase: file:///C:/Users/yaru.ding/Desktop/Debug/AndonWeChat.exe
-----------------------------------------
-System.Windows.Forms
-    Assembly Version: 4.0.0.0
-    Win32 Version: 4.0.30128.1 built by: RC1Rel
-    CodeBase: file:///C:/Windows/Microsoft.Net/assembly/GAC_MSIL/System.Windows.Forms/v4.0_4.0.0.0__b77a5c561934e089/System.Windows.Forms.dll
-----------------------------------------
-System.Drawing
-    Assembly Version: 4.0.0.0
-    Win32 Version: 4.0.30128.1 built by: RC1Rel
-    CodeBase: file:///C:/Windows/Microsoft.Net/assembly/GAC_MSIL/System.Drawing/v4.0_4.0.0.0__b03f5f7f11d50a3a/System.Drawing.dll
-----------------------------------------
-System
-    Assembly Version: 4.0.0.0
-    Win32 Version: 4.0.30128.1 built by: RC1Rel
-    CodeBase: file:///C:/Windows/Microsoft.Net/assembly/GAC_MSIL/System/v4.0_4.0.0.0__b77a5c561934e089/System.dll
-----------------------------------------
-AndonSys.Common
-    Assembly Version: 1.0.0.0
-    Win32 Version: 1.0.0.0
-    CodeBase: file:///C:/Users/yaru.ding/Desktop/Debug/AndonSys.Common.DLL
-----------------------------------------
-System.Xml
-    Assembly Version: 4.0.0.0
-    Win32 Version: 4.0.30128.1 built by: RC1Rel
-    CodeBase: file:///C:/Windows/Microsoft.Net/assembly/GAC_MSIL/System.Xml/v4.0_4.0.0.0__b77a5c561934e089/System.Xml.dll
-----------------------------------------
-System.Configuration
-    Assembly Version: 4.0.0.0
-    Win32 Version: 4.0.30128.1 (RC1Rel.030128-0100)
-    CodeBase: file:///C:/Windows/Microsoft.Net/assembly/GAC_MSIL/System.Configuration/v4.0_4.0.0.0__b03f5f7f11d50a3a/System.Configuration.dll
-----------------------------------------
-id0sfazb
-    Assembly Version: 1.0.0.0
-    Win32 Version: 4.0.30128.1 built by: RC1Rel
-    CodeBase: file:///C:/Windows/Microsoft.Net/assembly/GAC_MSIL/System/v4.0_4.0.0.0__b77a5c561934e089/System.dll
-----------------------------------------
-WXDCommon
-    Assembly Version: 1.0.0.0
-    Win32 Version: 1.0.0.0
-    CodeBase: file:///C:/Users/yaru.ding/Desktop/Debug/WXDCommon.DLL
-----------------------------------------
-System.Data
-    Assembly Version: 4.0.0.0
-    Win32 Version: 4.0.30128.1 (RC1Rel.030128-0100)
-    CodeBase: file:///C:/Windows/Microsoft.Net/assembly/GAC_32/System.Data/v4.0_4.0.0.0__b77a5c561934e089/System.Data.dll
-----------------------------------------
-System.Core
-    Assembly Version: 4.0.0.0
-    Win32 Version: 4.0.30128.1 built by: RC1Rel
-    CodeBase: file:///C:/Windows/Microsoft.Net/assembly/GAC_MSIL/System.Core/v4.0_4.0.0.0__b77a5c561934e089/System.Core.dll
-----------------------------------------
-WXModel
-    Assembly Version: 1.0.0.0
-    Win32 Version: 1.0.0.0
-    CodeBase: file:///C:/Users/yaru.ding/Desktop/Debug/WXModel.DLL
-----------------------------------------
-WeiXinInterfaceV1
-    Assembly Version: 1.0.0.0
-    Win32 Version: 1.0.0.0
-    CodeBase: file:///C:/Users/yaru.ding/Desktop/Debug/WeiXinInterfaceV1.DLL
-----------------------------------------
-System.Numerics
-    Assembly Version: 4.0.0.0
-    Win32 Version: 4.0.30128.1 built by: RC1Rel
-    CodeBase: file:///C:/Windows/Microsoft.Net/assembly/GAC_MSIL/System.Numerics/v4.0_4.0.0.0__b77a5c561934e089/System.Numerics.dll
-----------------------------------------
-System.Data.OracleClient
-    Assembly Version: 4.0.0.0
-    Win32 Version: 4.0.30128.1 (RC1Rel.030128-0100)
-    CodeBase: file:///C:/Windows/Microsoft.Net/assembly/GAC_32/System.Data.OracleClient/v4.0_4.0.0.0__b77a5c561934e089/System.Data.OracleClient.dll
-----------------------------------------
-System.Transactions
-    Assembly Version: 4.0.0.0
-    Win32 Version: 4.0.30128.1 (RC1Rel.030128-0100)
-    CodeBase: file:///C:/Windows/Microsoft.Net/assembly/GAC_32/System.Transactions/v4.0_4.0.0.0__b77a5c561934e089/System.Transactions.dll
-----------------------------------------
-System.EnterpriseServices
-    Assembly Version: 4.0.0.0
-    Win32 Version: 4.0.30128.1 (RC1Rel.030128-0100)
-    CodeBase: file:///C:/Windows/Microsoft.Net/assembly/GAC_32/System.EnterpriseServices/v4.0_4.0.0.0__b03f5f7f11d50a3a/System.EnterpriseServices.dll
-----------------------------------------
-Newtonsoft.Json.Net20
-    Assembly Version: 3.5.0.0
-    Win32 Version: 3.5.0.0
-    CodeBase: file:///C:/Users/yaru.ding/Desktop/Debug/Newtonsoft.Json.Net20.DLL
-----------------------------------------
-EASendMail40
-    Assembly Version: 7.3.0.6
-    Win32 Version: 7.3.0.6
-    CodeBase: file:///C:/Users/yaru.ding/Desktop/Debug/EASendMail40.DLL
-----------------------------------------
+        //横轴
+        gra.DrawLine(new Pen(Color.Black, 1), startX, height - startY, width - 30, height - startY);
 
-************** JIT Debugging **************
-To enable just-in-time (JIT) debugging, the .config file for this
-application or computer (machine.config) must have the
-jitDebugging value set in the system.windows.forms section.
-The application must also be compiled with debugging
-enabled.
+        for (int j = 0; j < verticalText.Length; j++)
+        {
+            gra.DrawLine(new Pen(Color.Black, 1), startX, height - startY - (j + 1) * disH, width - 30, height - startY - (j + 1) * disH);
 
-For example:
+            SizeF cordSize = gra.MeasureString(verticalText[j], cordFont);
 
-<configuration>
-    <system.windows.forms jitDebugging="true" />
-</configuration>
+            gra.DrawString(verticalText[j], cordFont, blackBrush, new PointF(startX - cordSize.Width, height - startY - (j + 1) * disH - cordSize.Width / 2));
+        }
 
-When JIT debugging is enabled, any unhandled exception
-will be sent to the JIT debugger registered on the computer
-rather than be handled by this dialog box.
+        //数据
+        for (int devID = 0; devID < values.Length; devID++)
+        {
+            int maxLength = values[devID].Length > horizontalText.Length ? horizontalText.Length : values[devID].Length;
+
+            Point[] points = new Point[maxLength];
+            for (int k = 0; k < maxLength; k++)
+            {
+                points[k] = new Point(startX + disW/2 + k * disW, height - startY - Convert.ToInt32(disH / (Convert.ToDouble(verticalText[1]) - Convert.ToDouble(verticalText[0])) * values[devID][k]));
+                gra.DrawString(values[devID][k].ToString(), cordFont, new SolidBrush(colors[devID]), new PointF(startX + disW / 2 + k * disW, height - startY - Convert.ToInt32(disH / (Convert.ToDouble(verticalText[1]) - Convert.ToDouble(verticalText[0])) * values[devID][k])));
+            }
+
+            gra.DrawLines(new Pen(colors[devID], 2), points);
+        }
+
+                
+    }
+    catch (Exception ex)
+    { }
+}
+
